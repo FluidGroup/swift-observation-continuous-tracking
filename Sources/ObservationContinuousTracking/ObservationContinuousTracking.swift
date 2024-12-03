@@ -73,7 +73,9 @@ func UI() {
   
 }
 
-public struct ObservationTrackingSubscription: Sendable {
+import Combine
+
+public struct ObservationTrackingSubscription: Sendable, Cancellable {
   
   private let onCancel: @Sendable () -> Void
   
