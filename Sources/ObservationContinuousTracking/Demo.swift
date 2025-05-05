@@ -18,21 +18,35 @@ struct BookObservation: View, PreviewProvider {
     
     var body: some View {
       VStack {
+        Text("Count: \(controller.count)")          
         Button("Up") {
           controller.increment()
         }
-        Button("Background Up") {
+        Button("Background Up") {        
           controller.backgroundIncrement()
         }
       }
       .onAppear {
         
-        withObservationContinuousTracking {
-          _ = controller.count
-        } onChange: {
-          //          MainActor.assumeIsolated {
-          print("Count: \(controller.count)")
-          //          }
+//        withContinuousTracking {
+//          _ = controller.count
+//        } onChange: {
+//          print("onChange", Thread.current)          
+//        } didChange: {
+//          print("didChange", Thread.current)
+//          print("\(controller.count)")
+//        }
+        
+        Task.detached {
+          withContinuousTracking {
+            _ = controller.count
+          } onChange: {
+            print("onChange", Thread.current)          
+          } didChange: {
+            print("didChange", Thread.current)
+
+            print("Did Change Count: \(controller.count)")
+          }
         }
         
       }
@@ -61,13 +75,6 @@ struct BookObservation: View, PreviewProvider {
   }
 }
 
-private func _a() {
-  _ = withObservationContinuousTracking {
-    //    UI()
-  } onChange: {
-    
-  }
-}
 
 @MainActor
 func UI() {
